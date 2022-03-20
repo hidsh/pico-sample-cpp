@@ -12,12 +12,12 @@ make -j4
 
 # flash into pi-pico 
 ```
-openocd -f interface/picoprobe.cfg -f target/rp2040.cfg -c "program sample.elf verify reset exit"
+openocd -f interface/picoprobe.cfg -f target/rp2040.cfg -c "program puts.elf verify reset exit"
 ```
 
 or use [picoprog.sh](https://gist.github.com/hidsh/4dc19284ddea311825950b2a1be621bc)
 ```
-picoprog.sh sample.elf
+picoprog.sh puts.elf
 ```
 
 # check the output from pi-pico using picoprobe
