@@ -1,0 +1,1 @@
+/Users/g/git-clone/pico-sdk/external/pico_sdk_import.cmake
