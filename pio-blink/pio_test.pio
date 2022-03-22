@@ -1,0 +1,40 @@
+.program pio_test
+
+loop:
+    pull            ; TX_FIFOからOSRへデータをPULL
+    out pins, 1     ; OSRから1bit分出力ポートへ
+    jmp loop        ; 先頭に戻る
+
+
+% c-sdk {
+static inline void pio_test_program_init( PIO pio, uint sm, uint offset, uint out_base, uint out_pin_num )
+{
+    pio_sm_config c = pio_test_program_get_default_config( offset );
+        /* PIOステートマシンコンフィグのデフォルト値を取得 */
+
+    sm_config_set_out_pins( &c, out_base, out_pin_num );
+        /* PIOステートマシンコンフィグの出力ピン設定を編集する */
+        /* ベースピン番号とベースから何ピンまで使うかを指定 */
+
+    {
+        uint pin_offset;
+        for ( pin_offset = 0; pin_offset < out_pin_num; pin_offset++ )
+        {
+            pio_gpio_init( pio, out_base + pin_offset );
+            /* GPIOをPIOに割り当てる */
+        }
+    }
+
+    pio_sm_set_consecutive_pindirs( pio, sm, out_base, out_pin_num, true );
+        /* ピンの向きを設定 */
+
+    sm_config_set_clkdiv( &c, 6 );
+        /* クロック周波数6分周 */
+
+    pio_sm_init( pio, sm, offset, &c );
+        /* PIOステートマシンコンフィグを反映しプログラムカウンタを設定 */
+
+    pio_sm_set_enabled( pio, sm, true );
+        /* PIOステートマシンを有効にする */
+}
+%}
